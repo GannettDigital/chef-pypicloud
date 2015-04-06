@@ -11,8 +11,9 @@ Requirements
 - uwsgi
 - redisio
 
-Attributes
+Configuration
 ----------
+### Attributes
 See `attributes/default.rb` for node values.
 
 - node['pypicloud']['version'] = nil
