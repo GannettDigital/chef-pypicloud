@@ -1,0 +1,56 @@
+# User-made changes in this file will be silently lost, as it is silently
+# rewrited with upgrade of uwsgi package.
+#
+# If you want to change default options of uWSGI daemon, then:
+# * copy this file somewhere
+# * add/remove/change options in copied file
+# * edit /etc/default/uwsgi and change location of inherited configuration
+#   file to path to copied file
+
+[uwsgi]
+master = true
+uid = <%= @uid %>
+pidfile = /opt/uwsgi/uwsgi.pid
+emperor = <%= @emperor %>
+emperor-pidfile = /opt/uwsgi/emperor.pid
+emperor-tyrant = false
+chmod-socket = 777
+fastrouter = 127.0.0.1:3001
+fastrouter = /opt/uwsgi/fastrouter.sock
+fastrouter-subscription-server = 127.0.0.1:3032
+fastrouter-subscription-server = 0.0.0.0:3032
+;http-subscription-server = 127.0.0.1:3033
+;http-subscription-server = 0.0.0.0:3033
+logto = /var/log/uwsgi/uwsgi.log
+
+; clean up sockets/files after exit/restart
+vacuum
+;
+disable-logging
+
+log-reopen
+
+enable-threads
+
+memory-report 
+
+fastrouter-cheap = true
+fastrouter-processes = 1
+fastrouter-timeout = <%= node['uwsgi']['fastrouter-timeout'] %>
+fastrouter-harakiri = <%= node['uwsgi']['fastrouter-harakiri'] %>
+harakiri = <%= node['uwsgi']['harakiri'] %>
+harakiri-verbose
+; no-harakiri-after-req-hook
+
+stats = /opt/uwsgi/stats/uwsgi.srv.stats.sock
+;stats = 127.0.0.1:1717
+fastrouter-stats = /opt/uwsgi/stats/fastrouter.srv.stats.sock
+;fastrouter-stats = 127.0.0.1:1718
+emperor-stats = /opt/uwsgi/stats/emperor.srv.stats.sock
+;emperor-stats =  127.0.0.1:1719
+
+; added to catch exceptions only in QA
+catch-exceptions
+listen = 1024
+
+

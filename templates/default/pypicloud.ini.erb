@@ -1,0 +1,109 @@
+[app:main]
+use = egg:pypicloud
+
+pyramid.reload_templates = False
+pyramid.debug_authorization = false
+pyramid.debug_notfound = false
+pyramid.debug_routematch = false
+pyramid.default_locale_name = en
+
+
+
+pypi.storage = <%= node['pypicloud']['storage']['type'] %>
+<% if node['pypicloud']['storage']['type'] == "s3" %>
+storage.access_key = <%= @accesskey %>
+storage.secret_key = <%= @secretkey %>
+storage.bucket = <%= @bucket %>
+<% else %>
+storage.dir = <%= node['pypicloud']['storage']['filedir'] %>
+<% end %>
+
+<% if ! node['pypicloud']['cachedb']['type'].nil? %>
+pypi.db = <%= node['pypicloud']['cachedb']['type'] %>
+db.url = <%= node['pypicloud']['cachedb']['url'] %>
+<% end %>
+
+pypi.allow_overwrite = <%= node['pypicloud']['allow-overwrite'] %>
+
+pypi.default_read = <%= node['pypicloud']['default-read'] %>
+pypi.default_write = <%= node['pypicloud']['default-write'] %>
+
+auth.admins = <%= node['pypicloud']['auth']['admins'] %>
+
+<% @users.each_pair do |user,password| %>
+<%= "user.#{user} = #{password}" %>
+<% end %>
+#user.administrator = $6$rounds=101821$Xb81VD1R1rPHGHYN$gvRdEbWFv6F6GyA5OnGnE/FeO3pg3wxpDDget0Uvwn5J8Ikgz1YV7XCGBiBznyGxzRbrPlqfDFqQ8cbWxxEsu1
+
+# For beaker
+session.encrypt_key = S0FpqANTxFW2Ww2n/W18V2MWgGzUvehpv+xNI0I4yhk=
+session.validate_key = 576RSq1SHCq6LgMMgicW+ivvskcBwnw4Ecb2++fd1xk=
+session.secure = False
+
+###
+# wsgi server configuration
+###
+
+[uwsgi]
+paste = config:%p
+paste-logger = %p
+socket = 127.0.0.1:3031
+master = true
+reload-mercy = 15
+worker-reload-mercy = 15
+max-requests = 1000
+
+enable-threads = true
+threads = <%= node['uwsgi']['threads'] %>
+
+virtualenv = <%= node['pypicloud']['installdir'] %>
+uid = <%= node['pypicloud']['uwsgi']['uid'] %>
+gid = <%= node['pypicloud']['group'] %>
+
+<% if node['uwsgi']['cheap'] == true %>
+; enable cheap mode
+cheaper = <%= node['uwsgi']['cheaper'] %>
+cheaper-initial = <%= node['uwsgi']['cheaper-initial'] %>
+<% end %>
+
+; spawn workers
+workers = <%= node['uwsgi']['workers'] %>
+
+; kill idle sites after 15 minutes
+idle = 900
+ 
+; increased buffer size due to large cookie headers that may exceed 4k in size
+buffer-size = 8192
+
+listen = <%= node['uwsgi']['listen-queue'] %>
+
+harakiri = <%= node['uwsgi']['harakiri'] %>
+harakiri-verbose = true
+
+###
+# logging configuration
+# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/logging.html
+###
+
+[loggers]
+keys = root
+
+[handlers]
+keys = file
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = INFO
+handlers = file
+
+[handler_file]
+class = handlers.RotatingFileHandler
+args = ('/var/log/uwsgi/pypicloud.log', 'mode=a', 'maxBytes=1000000', 'backupCount=5')
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)s %(asctime)s [%(name)s] %(message)s
+

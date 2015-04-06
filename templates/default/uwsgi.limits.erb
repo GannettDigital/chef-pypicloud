@@ -1,0 +1,10 @@
+# Default limit for number of user's processes to prevent
+# accidental fork bombs.
+# See rhbz #432903 for reasoning.
+#Need to create attributes for couchbase user and file limits
+
+
+uwsgi       soft    nofile     4096
+uwsgi	    hard    nofile     4096
+root        soft    nofile     8192
+root 	    hard    nofile     8192
