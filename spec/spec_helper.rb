@@ -21,5 +21,5 @@ RSpec.configure do |config|
   end
 end
 
-Coveralls.wear!
+# Coveralls.wear!
 at_exit { ChefSpec::Coverage.report! }
