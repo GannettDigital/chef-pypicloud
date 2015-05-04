@@ -56,4 +56,5 @@ end
 
 include_recipe 'pypicloud::redis' if node['pypicloud']['cachedb']['type'] == 'redis'
 include_recipe 'pypicloud::nginx'
+include_recipe 'pypicloud::nginx-ssl' if node['pypicloud']['ssl-enabled']
 include_recipe 'pypicloud::uwsgi'

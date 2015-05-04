@@ -1,0 +1,23 @@
+server {
+    listen 443 ssl;
+    server_name  <%= node['pypicloud']['site-name'] %>;
+    access_log /var/log/nginx/access.pypicloud-ssl.log main;
+    error_log /var/log/nginx/error.log;
+    ssl_certificate     <%= "#{node['pypicloud']['sslcert-path']}/#{node['pypicloud']['ssl-name']}.crt" %>;
+    ssl_certificate_key <%= "#{node['pypicloud']['sslcert-path']}/#{node['pypicloud']['ssl-name']}.key" %>;
+    ssl_protocols       <%= node['pypicloud']['ssl_protocols'] %>;
+    ssl_ciphers         <%= node['pypicloud']['ssl_ciphers'] %>;
+
+    location / {
+        include uwsgi_params;
+        proxy_set_header X-Request-Start "t=${msec}";
+		
+        #uwsgi_pass unix:///opt/uwsgi/fastrouter.sock;
+        uwsgi_param UWSGI_FASTROUTER_KEY pypicloud;
+        uwsgi_pass 127.0.0.1:3031;
+        client_max_body_size    150m;
+        client_body_buffer_size 512k;
+        uwsgi_read_timeout <%= node['nginx']['uwsgi_read_timeout'] %>;
+        uwsgi_send_timeout <%= node['nginx']['uwsgi_send_timeout'] %>;
+	}
+}

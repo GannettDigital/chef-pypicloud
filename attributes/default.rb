@@ -18,6 +18,13 @@ default['pypicloud']['uwsgi']['emperor'] = '/etc/uwsgi/siteconf'
 default['pypicloud']['uwsgi']['workers'] = '2'
 default['pypicloud']['uwsgi']['uid'] = 'nobody'
 
+default['pypicloud']['ssl-enabled'] = false
+default['pypicloud']['sslcert-path'] = '/etc/ssl/certs'
+default['pypicloud']['ssl-name'] = 'pypicloud-cert'
+default['pypicloud']['data_bag'] = 'pypicloud'
+default['pypicloud']['ssl_protocols'] = 'TLSv1 TLSv1.1 TLSv1.2'
+default['pypicloud']['ssl_ciphers'] = 'HIGH:!aNULL:!MD5'
+
 default['nginx']['uwsgi_read_timeout'] = 90
 default['nginx']['uwsgi_send_timeout'] = 90
 default['uwsgi']['harakiri'] = 60
