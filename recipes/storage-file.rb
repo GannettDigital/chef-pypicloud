@@ -19,7 +19,7 @@ directory node['pypicloud']['storage']['filedir'] do
   recursive true
 end
 
-udb = data_bag_item('pypicloud', 'users')
+udb = data_bag_item(node['pypicloud']['data_bag'], 'users')
 users = udb['users']
 
 template '/etc/uwsgi/appconf/pypicloud.ini' do
