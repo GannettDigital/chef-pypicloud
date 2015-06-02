@@ -12,10 +12,13 @@ service 'uwsgi' do
   action :nothing
 end
 
-udb = data_bag_item('pypicloud', 'users')
+pcdatabag = node['pypicloud']['data_bag']
+
+udb = data_bag_item(pcdatabag, 'users')
+
 users = udb['users']
 
-sdb = data_bag_item('pypicloud', 'storage')
+sdb = data_bag_item(pcdatabag, 'storage')
 
 template '/etc/uwsgi/appconf/pypicloud.ini' do
   source 'pypicloud.ini.erb'
