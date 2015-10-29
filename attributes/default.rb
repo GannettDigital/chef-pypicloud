@@ -18,6 +18,8 @@ default['pypicloud']['uwsgi']['emperor'] = '/etc/uwsgi/siteconf'
 default['pypicloud']['uwsgi']['workers'] = '2'
 default['pypicloud']['uwsgi']['uid'] = 'nobody'
 
+default['pypicloud']['nginx']['client_max_body_size'] = '250m'
+
 default['pypicloud']['ssl-enabled'] = false
 default['pypicloud']['sslcert-path'] = '/etc/ssl/certs'
 default['pypicloud']['ssl-name'] = 'pypicloud-cert'
