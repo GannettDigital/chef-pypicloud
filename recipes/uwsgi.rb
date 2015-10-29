@@ -16,7 +16,7 @@ template '/etc/security/limits.d/uwsgi.conf' do
   source 'uwsgi.limits.erb'
 end
 
-template '/etc/uwsgi/uwsgi.ini'  do
+template '/etc/uwsgi/uwsgi.ini' do
   source 'uwsgi.ini.erb'
   mode 0644
   owner 'root'

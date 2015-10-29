@@ -3,6 +3,10 @@ pypicloud CHANGELOG
 
 This file is used to list changes made in each version of the pypicloud cookbook.
 
+0.1.2
+-----
+- Jason Neves - Parameterize max client body size and set default to 250m
+
 0.1.1
 -----
 - Rob Gindes - updated Berksfile to use our supermarket as source. removed the kitchen file that was here as a placeholder.
